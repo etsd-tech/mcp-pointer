@@ -1,5 +1,13 @@
 # @mcp-pointer/chrome-extension
 
+## 0.4.3
+
+### Patch Changes
+
+- 5d4a0cb: Fix manifest version synchronization in release workflow
+
+  The Chrome extension manifest now properly syncs with package.json version during releases
+
 ## 0.4.2
 
 ### Patch Changes

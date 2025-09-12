@@ -1,6 +1,6 @@
 {
   "name": "@mcp-pointer/chrome-extension",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/etsd-tech/mcp-pointer.git",
