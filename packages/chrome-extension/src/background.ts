@@ -70,5 +70,21 @@ chrome.runtime.onMessage
     }
   });
 
+// Handle extension install/update
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'update') {
+    const previousVersion = details.previousVersion;
+    const currentVersion = chrome.runtime.getManifest().version;
+    
+    logger.info(`🔄 Extension updated from ${previousVersion} to ${currentVersion}`);
+    
+    // Open update notification page
+    chrome.tabs.create({
+      url: 'https://mcp-pointer.etsd.tech/update-notice.html',
+      active: true
+    });
+  }
+});
+
 // Start initialization
 initialize();

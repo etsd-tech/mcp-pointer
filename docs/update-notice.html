@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Pointer - Auto-Update Fix</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin: 0 0 8px 0;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .update-box {
+            background: #f0f8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .update-title {
+            color: #2b6cb0;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            font-size: 18px;
+        }
+        
+        .steps {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: #4299e1;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            margin: 8px 0;
+            overflow-x: auto;
+        }
+        
+        .btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        
+        .btn:hover {
+            background: #3182ce;
+        }
+        
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .tool {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .tool-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+        
+        .close-notice {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .one-time-notice {
+            background: #fef5e7;
+            border: 1px solid #f6ad55;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">🔄</div>
+            <h1>MCP Pointer Updated!</h1>
+            <p class="subtitle">Auto-update fix now available</p>
+        </div>
+        
+        <div class="update-box">
+            <h2 class="update-title">🎉 What's New</h2>
+            <p>We've fixed the auto-update issue! Previously, users were stuck on the first installed version. Now your MCP Pointer will automatically stay up-to-date with the latest features and fixes.</p>
+        </div>
+
+        <div class="one-time-notice">
+            <h4 style="color: #c05621; margin: 0 0 8px 0;">⚠️ One-Time Action Required</h4>
+            <p style="margin: 8px 0; color: #744210;">
+                You need to run the config command <strong>one last time</strong> to enable auto-updates. After this, future updates will be automatic!
+            </p>
+        </div>
+        
+        <div class="steps">
+            <h3 style="margin-top: 0; color: #2d3748;">📋 Enable Auto-Updates</h3>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Run the config command for your AI tool:</strong>
+                    <div class="tools">
+                        <div class="tool">
+                            <div class="tool-name">Claude Code</div>
+                            <div class="code">npx -y @mcp-pointer/server@latest config claude</div>
+                        </div>
+                        <div class="tool">
+                            <div class="tool-name">Cursor</div>
+                            <div class="code">npx -y @mcp-pointer/server@latest config cursor</div>
+                        </div>
+                        <div class="tool">
+                            <div class="tool-name">Windsurf</div>
+                            <div class="code">npx -y @mcp-pointer/server@latest config windsurf</div>
+                        </div>
+                        <div class="tool">
+                            <div class="tool-name">Other Tools</div>
+                            <div class="code">npx -y @mcp-pointer/server@latest config manual</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Restart your AI tool</strong> to load the new configuration
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>You're done!</strong> Future updates will now be automatic - no more manual configuration needed
+                </div>
+            </div>
+        </div>
+        
+        <div style="background: #f0fff4; border: 1px solid #9ae6b4; border-radius: 8px; padding: 16px; margin: 20px 0;">
+            <h4 style="color: #2f855a; margin: 0 0 8px 0;">✨ After this one-time setup:</h4>
+            <ul style="margin: 8px 0; color: #276749;">
+                <li>MCP Pointer will automatically use the latest server version</li>
+                <li>New features and bug fixes delivered seamlessly</li>
+                <li>No more manual updates or configuration needed</li>
+                <li>This notice will only appear for major updates</li>
+            </ul>
+        </div>
+        
+        <div class="close-notice">
+            <button class="btn" onclick="window.close()">Got it, close this tab</button>
+            <p style="margin-top: 16px; color: #718096; font-size: 14px;">
+                You can close this tab anytime. This notice only appears after updates.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
