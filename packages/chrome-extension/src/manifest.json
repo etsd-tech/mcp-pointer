@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MCP Pointer",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Point to DOM elements for your agentic coding tools",
   "icons": {
     "16": "icon.png",
