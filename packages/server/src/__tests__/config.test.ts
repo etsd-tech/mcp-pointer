@@ -87,7 +87,7 @@ describe('configCommand', () => {
       const addCommand = mockExecSync.mock.calls[1][0];
 
       // Verify exact command structure for add command
-      const expectedCommand = 'claude mcp add pointer -s user --env MCP_POINTER_PORT=7007 -- npx -y @mcp-pointer/server start';
+      const expectedCommand = 'claude mcp add pointer -s user --env MCP_POINTER_PORT=7007 -- npx -y @mcp-pointer/server@latest start';
       expect(addCommand).toBe(expectedCommand);
 
       // Verify success message
@@ -101,7 +101,7 @@ describe('configCommand', () => {
 
       expect(mockExecSync).toHaveBeenCalledTimes(2);
       const addCommand = mockExecSync.mock.calls[1][0];
-      const expectedCommand = 'claude mcp add pointer -s user --env MCP_POINTER_PORT=8888 -- npx -y @mcp-pointer/server start';
+      const expectedCommand = 'claude mcp add pointer -s user --env MCP_POINTER_PORT=8888 -- npx -y @mcp-pointer/server@latest start';
       expect(addCommand).toBe(expectedCommand);
     });
 
@@ -117,7 +117,7 @@ describe('configCommand', () => {
 
       // Second call should be add command
       const addCommand = mockExecSync.mock.calls[1][0];
-      expect(addCommand).toBe('claude mcp add pointer -s user --env MCP_POINTER_PORT=7007 -- npx -y @mcp-pointer/server start');
+      expect(addCommand).toBe('claude mcp add pointer -s user --env MCP_POINTER_PORT=7007 -- npx -y @mcp-pointer/server@latest start');
 
       expect(mockLoggerInfo).toHaveBeenCalledWith(expect.stringContaining('🔄 Removed existing MCP Pointer configuration'));
       expect(mockLoggerInfo).toHaveBeenCalledWith(expect.stringContaining('✅ Successfully configured MCP Pointer for Claude Code'));
@@ -177,7 +177,7 @@ describe('configCommand', () => {
       const configObj = JSON.parse(decodedConfig);
 
       expect(configObj.command).toBe('npx');
-      expect(configObj.args).toEqual(['-y', '@mcp-pointer/server', 'start']);
+      expect(configObj.args).toEqual(['-y', '@mcp-pointer/server@latest', 'start']);
       expect(configObj.env.MCP_POINTER_PORT).toBe('7007');
 
       expect(mockLoggerInfo).toHaveBeenCalledWith(expect.stringContaining('✅ MCP Pointer configuration sent to Cursor IDE'));
@@ -216,7 +216,7 @@ describe('configCommand', () => {
 
       const pointerConfig = writtenConfig.mcpServers.pointer;
       expect(pointerConfig.command).toBe('npx');
-      expect(pointerConfig.args).toEqual(['-y', '@mcp-pointer/server', 'start']);
+      expect(pointerConfig.args).toEqual(['-y', '@mcp-pointer/server@latest', 'start']);
       expect(pointerConfig.env.MCP_POINTER_PORT).toBe('7007');
 
       expect(mockLoggerInfo).toHaveBeenCalledWith(expect.stringContaining('✅ Successfully configured MCP Pointer for Windsurf IDE'));
@@ -237,7 +237,7 @@ describe('configCommand', () => {
       expect(loggedMessages).toContain('"pointer"');
       expect(loggedMessages).toContain('"command": "npx"');
       expect(loggedMessages).toContain('"-y"');
-      expect(loggedMessages).toContain('"@mcp-pointer/server"');
+      expect(loggedMessages).toContain('"@mcp-pointer/server@latest"');
       expect(loggedMessages).toContain('"start"');
     });
   });

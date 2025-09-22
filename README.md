@@ -88,13 +88,18 @@ npx -y @mcp-pointer/server config manual     # Shows manual configuration for ot
 
 After configuration, **restart your coding tool** to load the MCP connection.
 
+> **🔄 Already using MCP Pointer?** Run the config command again to update to auto-updating configuration:
+> ```bash
+> npx -y @mcp-pointer/server config <your-tool>  # Reconfigures to always use latest version
+> ```
+
 ### 3. Start Using
 
 1. **Navigate to any webpage** 
 2. **`Option+Click`** any element to select it
 3. **Ask your AI** to analyze the targeted element!
 
-Your AI tool will automatically start the MCP server when needed using the `npx -y @mcp-pointer/server start` command.
+Your AI tool will automatically start the MCP server when needed using the `npx -y @mcp-pointer/server@latest start` command.
 
 **Available MCP Tool:**
 - `get-pointed-element` - Get textual information about the currently pointed DOM element from the browser extension
@@ -131,7 +136,7 @@ Your AI tool will automatically start the MCP server when needed using the `npx 
 
 ### Extension Not Connecting
 
-1. Make sure MCP server is running: `npx -y @mcp-pointer/server start`
+1. Make sure MCP server is running: `npx -y @mcp-pointer/server@latest start`
 2. Check browser console for WebSocket errors
 3. Verify port 7007 is not blocked by firewall
 
@@ -139,7 +144,7 @@ Your AI tool will automatically start the MCP server when needed using the `npx 
 
 1. Restart your AI assistant after installing
 2. Check MCP configuration: `mcp-pointer config <your-tool>`  
-3. Verify server is running: `npx -y @mcp-pointer/server start`
+3. Verify server is running: `npx -y @mcp-pointer/server@latest start`
 
 ### Elements Not Highlighting
 

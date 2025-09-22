@@ -47,7 +47,7 @@ function configureClaudeCode(port: string) {
     }
 
     // Now add the server configuration
-    const command = `claude mcp add ${MCP_SERVER_NAME} -s user --env MCP_POINTER_PORT=${port} -- npx -y @mcp-pointer/server start`;
+    const command = `claude mcp add ${MCP_SERVER_NAME} -s user --env MCP_POINTER_PORT=${port} -- npx -y @mcp-pointer/server@latest start`;
     execSync(command, { stdio: 'pipe' });
 
     logger.info('✅ Successfully configured MCP Pointer for Claude Code (user-wide)');
@@ -66,7 +66,7 @@ function configureCursor(port: string) {
     // Create the MCP server configuration
     const cursorConfig = {
       command: 'npx',
-      args: ['-y', '@mcp-pointer/server', 'start'],
+      args: ['-y', '@mcp-pointer/server@latest', 'start'],
       env: {
         MCP_POINTER_PORT: port,
       },
@@ -124,7 +124,7 @@ function configureWindsurf(port: string) {
     // Prepare the MCP Pointer configuration
     const mcpPointerConfig = {
       command: 'npx',
-      args: ['-y', '@mcp-pointer/server', 'start'],
+      args: ['-y', '@mcp-pointer/server@latest', 'start'],
       env: {
         MCP_POINTER_PORT: port,
       },
@@ -174,7 +174,7 @@ function showManualConfig(port: string) {
     mcpServers: {
       [MCP_SERVER_NAME]: {
         command: 'npx',
-        args: ['-y', '@mcp-pointer/server', 'start'],
+        args: ['-y', '@mcp-pointer/server@latest', 'start'],
         env: {
           MCP_POINTER_PORT: port,
         },
