@@ -43,7 +43,7 @@ program.on('option:silent', () => {
 program
   .name('mcp-pointer')
   .description('👆 MCP Pointer Server')
-  .version('0.1.0');
+  .version(process.env.npm_package_version ?? '0.1.0');
 
 program
   .command(CLICommand.START)
