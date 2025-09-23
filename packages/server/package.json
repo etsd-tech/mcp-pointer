@@ -1,6 +1,6 @@
 {
   "name": "@mcp-pointer/server",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "MCP Server for DOM element pointing - WebSocket bridge for element targeting",
   "repository": {
     "type": "git",
