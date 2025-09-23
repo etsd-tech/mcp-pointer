@@ -72,7 +72,7 @@ chrome.runtime.onMessage
 
 // Handle extension install/update
 chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason === 'update') {
+  if (details.reason === 'update' && details.previousVersion === '0.4.2') {
     const { previousVersion } = details;
     const currentVersion = chrome.runtime.getManifest().version;
 
@@ -80,7 +80,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 
     // Open update notification page
     chrome.tabs.create({
-      url: 'https://mcp-pointer.etsd.tech/update-notice.html',
+      url: 'https://mcp-pointer.etsd.tech/development-update.html',
       active: true,
     });
   }

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCP Pointer - Auto-Update Fix</title>
+    <title>MCP Pointer - Development updates</title>
+    <link rel="icon" type="image/png" href="icon.png">
+
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -26,6 +28,10 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
+        }
+
+        .banner {
+            border-radius: 8px;
         }
         
         .icon {
@@ -121,9 +127,6 @@
         }
         
         .tools {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
             margin: 20px 0;
         }
         
@@ -132,7 +135,7 @@
             border: 1px solid #e2e8f0;
             border-radius: 6px;
             padding: 16px;
-            text-align: center;
+            margin-bottom: 12px;
         }
         
         .tool-name {
@@ -155,25 +158,59 @@
             padding: 16px;
             margin: 20px 0;
         }
+        
+        .banner-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .beta-flag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 2px solid white;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="icon">🔄</div>
-            <h1>MCP Pointer Updated!</h1>
-            <p class="subtitle">Auto-update fix now available</p>
+            <div class="banner-container">
+                <img class="banner" src="banner.png" alt="MCP Pointer" style="max-width: 100%; height: auto; margin-bottom: 16px;">
+                <div class="beta-flag">Beta</div>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 18px; justify-content: center;">
+                
+                <div style="display: flex; flex-direction: column;">
+                    <h1 style="margin-bottom: 2px;">Development Updates</h1>
+                    <span style="color: #718096; font-size: 15px; font-weight: 500; letter-spacing: 0.5px;"><span class="icon" style="font-size: 14px; margin-bottom: 0;">🔄</span> September 24, 2025</span>
+                </div>
+            </div>
         </div>
         
         <div class="update-box">
-            <h2 class="update-title">🎉 What's New</h2>
-            <p>We've fixed the auto-update issue! Previously, users were stuck on the first installed version. Now your MCP Pointer will automatically stay up-to-date with the latest features and fixes.</p>
+            <h2 class="update-title">🎉 Auto-Updates Now Available!</h2>
+            <p>MCP Pointer now updates automatically! No more manual reconfiguration needed - just set it up once and stay current with all future updates.</p>
         </div>
 
         <div class="one-time-notice">
-            <h4 style="color: #c05621; margin: 0 0 8px 0;">⚠️ One-Time Action Required</h4>
+            <h4 style="color: #c05621; margin: 0 0 8px 0;">⚡ Quick Action Required (10 seconds)</h4>
             <p style="margin: 8px 0; color: #744210;">
-                You need to run the config command <strong>one last time</strong> to enable auto-updates. After this, future updates will be automatic!
+                <strong>Just run one command</strong> to enable auto-updates! This is the <strong>last time</strong> you'll need to run MCP Pointer config command. After this quick setup, future updates will be completely automatic !
+            </p>
+            <p style="margin: 8px 0; color: #744210; font-size: 14px;">
+                ⚠️ <strong>Important:</strong> Without this update, you may encounter bugs or compatibility issues when we release breaking changes in future versions.
             </p>
         </div>
         
@@ -193,14 +230,18 @@
                             <div class="tool-name">Cursor</div>
                             <div class="code">npx -y @mcp-pointer/server@latest config cursor</div>
                         </div>
-                        <div class="tool">
-                            <div class="tool-name">Windsurf</div>
-                            <div class="code">npx -y @mcp-pointer/server@latest config windsurf</div>
-                        </div>
-                        <div class="tool">
-                            <div class="tool-name">Other Tools</div>
-                            <div class="code">npx -y @mcp-pointer/server@latest config manual</div>
-                        </div>
+                        
+                        <details style="margin-top: 16px;">
+                            <summary style="cursor: pointer; padding: 8px; background: #f7fafc; border-radius: 6px; margin-bottom: 12px;">Other AI Tools (click to expand)</summary>
+                            <div class="tool">
+                                <div class="tool-name">Windsurf</div>
+                                <div class="code">npx -y @mcp-pointer/server@latest config windsurf</div>
+                            </div>
+                            <div class="tool">
+                                <div class="tool-name">Other Tools</div>
+                                <div class="code">npx -y @mcp-pointer/server@latest config manual</div>
+                            </div>
+                        </details>
                     </div>
                 </div>
             </div>
@@ -223,10 +264,30 @@
         <div style="background: #f0fff4; border: 1px solid #9ae6b4; border-radius: 8px; padding: 16px; margin: 20px 0;">
             <h4 style="color: #2f855a; margin: 0 0 8px 0;">✨ After this one-time setup:</h4>
             <ul style="margin: 8px 0; color: #276749;">
-                <li>MCP Pointer will automatically use the latest server version</li>
-                <li>New features and bug fixes delivered seamlessly</li>
-                <li>No more manual updates or configuration needed</li>
-                <li>This notice will only appear for major updates</li>
+                <li><strong>Zero maintenance required</strong> - No more manual updates</li>
+                <li>Latest features and bug fixes delivered automatically</li>
+                <li>Seamless updates without configuration changes</li>
+                <li>Update notifications only for major feature announcements</li>
+            </ul>
+        </div>
+
+        <div style="background: #fef5e7; border: 1px solid #f6ad55; border-radius: 8px; padding: 16px; margin: 20px 0;">
+            <h4 style="color: #c05621; margin: 0 0 8px 0;">🔬 What's Coming Next</h4>
+            <ul style="margin: 8px 0; color: #744210;">
+                <li><strong>Multi-select DOM elements</strong> - Currently under investigation</li>
+                <li><strong>Screenshot capture</strong> - Visual element context for multimodal AI tools</li>
+                <li><strong>Enhanced framework support</strong> - Better React and Vue component detection</li>
+            </ul>
+        </div>
+
+        <div style="background: #e6fffa; border: 1px solid #81e6d9; border-radius: 8px; padding: 16px; margin: 20px 0;">
+            <h4 style="color: #234e52; margin: 0 0 8px 0;">💬 Feedback & Support</h4>
+            <p style="margin: 8px 0; color: #285e61;">
+                We'd love to hear from you! Share your feedback, feature requests, or report bugs:
+            </p>
+            <ul style="margin: 8px 0; color: #285e61;">
+                <li><strong>Email:</strong> <a href="mailto:elie@etsd.tech" style="color: #2c7a7b;">elie@etsd.tech</a></li>
+                <li><strong>GitHub Issues:</strong> <a href="https://github.com/etsd-tech/mcp-pointer/issues" style="color: #2c7a7b;" target="_blank">Feature requests & bug reports</a></li>
             </ul>
         </div>
         
