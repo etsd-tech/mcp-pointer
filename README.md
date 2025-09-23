@@ -155,18 +155,22 @@ Your AI tool will automatically start the MCP server when needed using the `npx 
 ## 🚀 Roadmap
 
 ### 1. **Dynamic Context Control**
+   - Full raw context transferred to server
    - LLM-configurable detail levels (visible text only, all text, CSS levels)
-   - Progressive refinement options
-   - Token-conscious data fetching
+   - Progressive refinement options / token-conscious data fetching
 
-### 2. **Enhanced Framework Support**
-   - Vue.js component detection
-   - Better React support (React 19 removed `_debugSource`, affecting source mapping in dev builds)
-
-### 3. **Visual Content Support** (for multimodal LLMs)
+### 2. **Visual Content Support** (for multimodal LLMs)
    - Base64 encoding for images (img tags)
    - Screenshot capture of selected elements
    - Separate MCP tool for direct visual content retrieval
+
+### 3. **Enhanced Framework Support**
+   - Vue.js component detection
+   - Better React support (React 19 removed `_debugSource`, affecting source mapping in dev builds)
+
+### 4. **Multi Select**
+   - Having the ability to select multiple DOM elements
+   - https://github.com/etsd-tech/mcp-pointer/pull/9
 
 ## 📝 License
 
