@@ -1,5 +1,11 @@
 # @mcp-pointer/chrome-extension
 
+## 0.4.4
+
+### Patch Changes
+
+- 27d726d: Remove unnecessary tabs permission from Chrome extension manifest to comply with Chrome Web Store policy. The chrome.tabs.create() function works without the tabs permission.
+
 ## 0.4.3
 
 ### Patch Changes
