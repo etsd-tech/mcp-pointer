@@ -59,14 +59,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Update Chrome extension manifest in changeset PR
+        if: steps.changesets.outputs.hasChangesets == 'true'
+        run: |
+          git fetch origin changeset-release/main
+          git checkout changeset-release/main
+          pnpm -C packages/chrome-extension bump-manifest
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add packages/chrome-extension/src/manifest.json
+          git diff --staged --quiet || git commit -m "Update Chrome extension manifest version"
+          git push origin changeset-release/main
+
       - name: Clean up copied README
         run: rm -f packages/server/README.md
 
-      - name: Bump Chrome extension manifest version and rebuild
+      - name: Build Chrome extension for release
         if: steps.changesets.outputs.published == 'true'
-        run: |
-          pnpm -C packages/chrome-extension bump-manifest
-          pnpm -C packages/chrome-extension build
+        run: pnpm -C packages/chrome-extension build
 
       - name: Package Chrome extension for release
         if: steps.changesets.outputs.published == 'true'
