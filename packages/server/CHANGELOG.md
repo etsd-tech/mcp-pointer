@@ -1,5 +1,11 @@
 # @mcp-pointer/server
 
+## 0.4.5
+
+### Patch Changes
+
+- b245b98: Sync server version with chrome extension to maintain version alignment. Both packages are now linked and will be versioned together.
+
 ## 0.4.3
 
 ### Patch Changes
