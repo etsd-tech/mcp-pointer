@@ -11,3 +11,5 @@ packages/server/src/__tests__/tmp/
 
 # Release artifacts
 mcp-pointer-chrome-extension.zip
+
+.claude/*.local.md
