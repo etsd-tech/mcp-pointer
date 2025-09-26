@@ -60,16 +60,16 @@ export default class MCPService {
 
   private async handleCallTool(request: any) {
     if (request.params.name === MCPToolName.GET_POINTED_ELEMENT) {
-      return this.getTargetedElement();
+      return this.getPointedElement();
     }
 
     throw new Error(`Unknown tool: ${request.params.name}`);
   }
 
-  private async getTargetedElement() {
-    const element = await this.sharedState.getCurrentElement();
+  private async getPointedElement() {
+    const processedElement = await this.sharedState.getProcessedElement();
 
-    if (!element) {
+    if (!processedElement) {
       return {
         content: [
           {
@@ -85,7 +85,7 @@ export default class MCPService {
       content: [
         {
           type: 'text',
-          text: JSON.stringify(element, null, 2),
+          text: JSON.stringify(processedElement, null, 2),
         },
       ],
     };

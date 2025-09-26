@@ -1,28 +1,26 @@
-import { PointerMessageType, type TargetedElement } from '@mcp-pointer/shared/types';
 import WebSocketService from './services/websocket-service';
 import MCPService from './services/mcp-service';
 import SharedStateService from './services/shared-state-service';
+import ElementProcessor from './services/element-processor';
 import logger from './logger';
+import messageHandler from './message-handler';
 
 let sharedState: SharedStateService;
 let wsService: WebSocketService;
 let mcpService: MCPService;
+let elementProcessor: ElementProcessor;
 
 function initializeServices(port: string | number): void {
   sharedState = new SharedStateService();
   wsService = new WebSocketService(port);
   mcpService = new MCPService(sharedState);
+  elementProcessor = new ElementProcessor();
 }
 
 function setupMessageHandler(): void {
-  wsService.registerMessageHandler(async (type: string, data: any) => {
-    if (type === PointerMessageType.ELEMENT_SELECTED && data) {
-      const element = data as TargetedElement;
-      await sharedState.saveCurrentElement(element);
-    } else if (type === PointerMessageType.ELEMENT_CLEARED) {
-      await sharedState.saveCurrentElement(null);
-    }
-  });
+  wsService.registerMessageHandler(
+    (type, data) => messageHandler(type, data, { sharedState, elementProcessor }),
+  );
 }
 
 function performCleanup(): void {

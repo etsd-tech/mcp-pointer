@@ -1,99 +1,97 @@
 import fs from 'fs/promises';
+import path from 'path';
+import os from 'os';
 import SharedStateService from '../../services/shared-state-service';
-import {
-  setupTestDir, cleanupTestFiles, createMockElement, TEST_SHARED_STATE_PATH,
-} from '../test-helpers';
+import { createStateV1, createStateV2, createLegacyElement } from '../factories/shared-state-factory';
+
+jest.mock('../../logger', () => ({
+  debug: jest.fn(),
+  error: jest.fn(),
+}));
 
 describe('SharedStateService', () => {
   let service: SharedStateService;
+  let testPath: string;
 
-  beforeAll(async () => {
-    await setupTestDir();
-
-    // Monkey-patch the constant for testing
-    const SharedStateServiceModule = await import('../../services/shared-state-service');
-    const SharedStateServiceClass = SharedStateServiceModule.default;
-
-    // Override the static constant
-    (SharedStateServiceClass as any).SHARED_STATE_PATH = TEST_SHARED_STATE_PATH;
-
-    service = new SharedStateServiceClass();
+  beforeEach(async () => {
+    testPath = path.join(os.tmpdir(), `test-${Date.now()}.json`);
+    (SharedStateService as any).SHARED_STATE_PATH = testPath;
+    service = new SharedStateService();
   });
 
-  afterAll(async () => {
-    await cleanupTestFiles();
-  });
-
-  it('should save and load current element', async () => {
-    const mockElement = createMockElement();
-
-    await service.saveCurrentElement(mockElement);
-    const loadedElement = await service.getCurrentElement();
-
-    expect(loadedElement).toBeTruthy();
-    expect(loadedElement!.selector).toBe(mockElement.selector);
-    expect(loadedElement!.tagName).toBe(mockElement.tagName);
-    expect(loadedElement!.id).toBe(mockElement.id);
-    expect(loadedElement!.classes).toEqual(mockElement.classes);
-    expect(loadedElement!.innerText).toBe(mockElement.innerText);
-    expect(loadedElement!.attributes).toEqual(mockElement.attributes);
-    expect(loadedElement!.position).toEqual(mockElement.position);
-    expect(loadedElement!.cssProperties).toEqual(mockElement.cssProperties);
-    expect(loadedElement!.url).toBe(mockElement.url);
-    expect(loadedElement!.tabId).toBe(mockElement.tabId);
-  });
-
-  it('should handle null element', async () => {
-    await service.saveCurrentElement(null);
-    const loadedElement = await service.getCurrentElement();
-
-    expect(loadedElement).toBeNull();
-  });
-
-  it('should return null for missing file', async () => {
-    // Delete the file if it exists
+  afterEach(async () => {
     try {
-      await fs.unlink(TEST_SHARED_STATE_PATH);
+      await fs.unlink(testPath);
     } catch {
-      // File doesn't exist, which is fine
+      // ignore
     }
-
-    const loadedElement = await service.getCurrentElement();
-    expect(loadedElement).toBeNull();
   });
 
-  it('should handle corrupted file gracefully', async () => {
-    // Write invalid JSON to the file
-    await fs.writeFile(TEST_SHARED_STATE_PATH, 'invalid json content');
+  describe('saveState', () => {
+    it('writes state to file', async () => {
+      const state = createStateV2();
 
-    const loadedElement = await service.getCurrentElement();
-    expect(loadedElement).toBeNull();
+      await service.saveState(state);
+
+      const content = await fs.readFile(testPath, 'utf8');
+      const parsed = JSON.parse(content);
+      expect(parsed.stateVersion).toBe(state.stateVersion);
+      expect(parsed.data.processedPointedDOMElement).toEqual(state.data.processedPointedDOMElement);
+    });
+
+    it('overwrites corrupted file', async () => {
+      await fs.writeFile(testPath, 'invalid json');
+      const state = createStateV1();
+
+      await service.saveState(state);
+
+      const content = await fs.readFile(testPath, 'utf8');
+      const parsed = JSON.parse(content);
+      expect(parsed.stateVersion).toBe(state.stateVersion);
+      expect(parsed.data.processedPointedDOMElement).toEqual(state.data.processedPointedDOMElement);
+    });
   });
 
-  it('should save element over corrupted file', async () => {
-    // Write invalid JSON to the file
-    await fs.writeFile(TEST_SHARED_STATE_PATH, 'invalid json content');
+  describe('getPointedElement', () => {
+    it('returns processed element from v2 state', async () => {
+      const state = createStateV2();
+      await fs.writeFile(testPath, JSON.stringify(state));
 
-    const mockElement = createMockElement();
-    await service.saveCurrentElement(mockElement);
+      const result = await service.getPointedElement();
 
-    const loadedElement = await service.getCurrentElement();
-    expect(loadedElement).toBeTruthy();
-    expect(loadedElement!.selector).toBe(mockElement.selector);
-  });
+      expect(result).toEqual(state.data.processedPointedDOMElement);
+    });
 
-  it('should overwrite previous element', async () => {
-    const firstElement = createMockElement();
-    firstElement.selector = 'div.first-element';
+    it('returns processed element from v1 state', async () => {
+      const state = createStateV1();
+      await fs.writeFile(testPath, JSON.stringify(state));
 
-    const secondElement = createMockElement();
-    secondElement.selector = 'div.second-element';
+      const result = await service.getPointedElement();
 
-    await service.saveCurrentElement(firstElement);
-    await service.saveCurrentElement(secondElement);
+      expect(result).toEqual(state.data.processedPointedDOMElement);
+    });
 
-    const loadedElement = await service.getCurrentElement();
-    expect(loadedElement).toBeTruthy();
-    expect(loadedElement!.selector).toBe('div.second-element');
+    it('returns legacy element as-is', async () => {
+      const legacyElement = createLegacyElement();
+      await fs.writeFile(testPath, JSON.stringify(legacyElement));
+
+      const result = await service.getPointedElement();
+
+      expect(result).toEqual(legacyElement);
+    });
+
+    it('returns null for invalid json', async () => {
+      await fs.writeFile(testPath, 'invalid json');
+
+      const result = await service.getPointedElement();
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when file does not exist', async () => {
+      const result = await service.getPointedElement();
+
+      expect(result).toBeNull();
+    });
   });
 });

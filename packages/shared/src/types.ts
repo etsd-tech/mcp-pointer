@@ -34,12 +34,25 @@ export interface TargetedElement {
   tabId?: number;
 }
 
+// Raw data from browser (minimal, fail-safe)
+export interface RawPointedDOMElement {
+  // Core data (mandatory)
+  outerHTML: string; // Element's HTML serialization
+  url: string; // Page URL
+  timestamp: number; // Unix timestamp
+
+  // Position data (optional but highly recommended)
+  boundingClientRect?: DOMRect; // Position/size
+
+  // Optional enhanced data
+  computedStyles?: Record<string, string>; // Full CSS if configured
+  reactFiber?: any; // React internals if available
+}
+
 // Pointer message types between extension and MCP server
 export enum PointerMessageType {
-  ELEMENT_SELECTED = 'element-selected',
-  ELEMENT_CLEARED = 'element-cleared',
-  CONNECTION_TEST = 'connection-test',
-  SERVER_STATUS = 'server-status',
+  LEGACY_ELEMENT_SELECTED = 'element-selected',
+  DOM_ELEMENT_POINTED = 'dom-element-pointed',
 }
 
 export interface PointerMessage {
