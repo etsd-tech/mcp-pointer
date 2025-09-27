@@ -14,6 +14,8 @@
 
   Server ready for browser extension updates.
 
+- Added dynamic context control (text detail & css levels)
+
 ## 0.3.1
 
 ### Patch Changes
