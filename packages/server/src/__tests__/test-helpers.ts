@@ -25,17 +25,32 @@ export async function cleanupTestFiles(): Promise<void> {
 }
 
 export function createMockElement(): TargetedElement {
+  const text = 'Test Element';
   return {
     selector: 'div.test-element',
     tagName: 'DIV',
     id: 'test-id',
     classes: ['test-class'],
-    innerText: 'Test Element',
+    innerText: text,
+    textContent: text,
+    textDetail: 'full',
+    textVariants: {
+      visible: text,
+      full: text,
+    },
     attributes: { 'data-test': 'true' },
     position: {
       x: 100, y: 200, width: 300, height: 50,
     },
+    cssLevel: 1,
     cssProperties: {
+      display: 'block',
+      position: 'relative',
+      fontSize: '16px',
+      color: 'rgb(0, 0, 0)',
+      backgroundColor: 'rgb(255, 255, 255)',
+    },
+    cssComputed: {
       display: 'block',
       position: 'relative',
       fontSize: '16px',

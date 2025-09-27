@@ -5,7 +5,14 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { version } from 'process';
+import { CSS_DETAIL_OPTIONS, TEXT_DETAIL_OPTIONS } from '@mcp-pointer/shared/detail';
 import type PointerWebSocketServer from './websocket-server';
+import {
+  normalizeDetailParameters,
+  shapeElementForDetail,
+  type DetailParameters,
+  type NormalizedDetailParameters,
+} from './utils/element-detail';
 
 enum MCPToolName {
   GET_POINTED_ELEMENT = 'get-pointed-element',
@@ -47,10 +54,21 @@ export default class MCPHandler {
       tools: [
         {
           name: MCPToolName.GET_POINTED_ELEMENT,
-          description: 'Get information about the currently pointed/shown DOM element from the browser extension, in order to let you see a specific element the user is showing you on his/her the browser.',
+          description: 'Get information about the currently pointed/shown DOM element. Control returned payload size with optional textDetail (full|visible|none) and cssLevel (0-3).',
           inputSchema: {
             type: 'object',
-            properties: {},
+            properties: {
+              textDetail: {
+                type: 'string',
+                enum: [...TEXT_DETAIL_OPTIONS],
+                description: 'Controls how much text is returned. full (default) includes hidden text fallback, visible uses only rendered text, none omits text fields.',
+              },
+              cssLevel: {
+                type: 'integer',
+                enum: [...CSS_DETAIL_OPTIONS],
+                description: 'Controls CSS payload detail. 0 omits CSS, 1 includes layout basics, 2 adds box model, 3 returns the full computed style.',
+              },
+            },
             required: [],
           },
         },
@@ -60,13 +78,16 @@ export default class MCPHandler {
 
   private async handleCallTool(request: any) {
     if (request.params.name === MCPToolName.GET_POINTED_ELEMENT) {
-      return this.getTargetedElement();
+      const normalized = normalizeDetailParameters(
+        request.params.arguments as DetailParameters | undefined,
+      );
+      return this.getTargetedElement(normalized);
     }
 
     throw new Error(`Unknown tool: ${request.params.name}`);
   }
 
-  private getTargetedElement() {
+  private getTargetedElement(details: NormalizedDetailParameters) {
     const element = this.wsServer.getCurrentElement();
 
     if (!element) {
@@ -81,11 +102,13 @@ export default class MCPHandler {
       };
     }
 
+    const shapedElement = shapeElementForDetail(element, details.textDetail, details.cssLevel);
+
     return {
       content: [
         {
           type: 'text',
-          text: JSON.stringify(element, null, 2),
+          text: JSON.stringify(shapedElement, null, 2),
         },
       ],
     };
