@@ -21,6 +21,7 @@ The extension lets you visually select DOM elements in the browser, and the MCP 
 
 - 🎯 **`Option+Click` Selection** - Simply hold `Option` (Alt on Windows) and click any element
 - 📋 **Complete Element Data** - Text content, CSS classes, HTML attributes, positioning, and styling
+- 💡 **Dynamic Context Control** - Request visible-only text, suppress text entirely, or dial CSS detail from none → full computed styles per MCP call
 - ⚛️ **React Component Detection** - Component names and source files via Fiber (experimental)
 - 🔗 **WebSocket Connection** - Real-time communication between browser and AI tools
 - 🤖 **MCP Compatible** - Works with Claude Code and other MCP-enabled AI tools
@@ -102,7 +103,9 @@ After configuration, **restart your coding tool** to load the MCP connection.
 Your AI tool will automatically start the MCP server when needed using the `npx -y @mcp-pointer/server@latest start` command.
 
 **Available MCP Tool:**
-- `get-pointed-element` - Get textual information about the currently pointed DOM element from the browser extension
+- `get-pointed-element` – Returns textual information about the currently pointed DOM element. Optional arguments:
+  - `textDetail`: `"full" | "visible" | "none"` (default `"full"`) controls how much text to include.
+  - `cssLevel`: `0 | 1 | 2 | 3` (default `1`) controls styling detail, from no CSS (0) up to full computed styles (3).
 
 ## 🎯 How It Works
 
