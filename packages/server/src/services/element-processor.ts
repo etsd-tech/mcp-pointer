@@ -8,12 +8,10 @@ import logger from '../logger';
 
 function safeGet<T>(obj: any, path: string, defaultValue: T): T {
   const keys = path.split('.');
-  let result = obj;
-  for (const key of keys) {
-    result = result?.[key];
+  return keys.reduce((result, key) => {
     if (result === undefined) return defaultValue;
-  }
-  return result ?? defaultValue;
+    return result?.[key];
+  }, obj) ?? defaultValue;
 }
 
 export default class ElementProcessor {
@@ -89,7 +87,7 @@ export default class ElementProcessor {
       framework: 'react' as const,
     };
 
-    const sourceFile = safeGet(reactFiber, '_debugSource.fileName', '');
+    const sourceFile = safeGet<string>(reactFiber, '_debugSource.fileName', '');
     if (sourceFile && typeof sourceFile === 'string') {
       const fileName = sourceFile.split('/').pop() || sourceFile;
       const lineNumber = safeGet(reactFiber, '_debugSource.lineNumber', 0);

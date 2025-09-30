@@ -67,7 +67,7 @@ export default class MCPService {
   }
 
   private async getPointedElement() {
-    const processedElement = await this.sharedState.getProcessedElement();
+    const processedElement = await this.sharedState.getPointedElement();
 
     if (!processedElement) {
       return {

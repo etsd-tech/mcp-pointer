@@ -1,11 +1,11 @@
-import { JSDOM } from 'jsdom';
+import { parse } from 'node-html-parser';
 
 export function extractFromHTML(html: string) {
   const warnings: string[] = [];
 
   try {
-    const fragment = JSDOM.fragment(html);
-    const element = fragment.firstChild as Element;
+    const root = parse(html);
+    const element = root.firstChild as unknown as Element;
 
     if (!element) {
       warnings.push('No element found in HTML');
