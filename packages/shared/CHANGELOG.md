@@ -1,5 +1,19 @@
 # @mcp-pointer/shared
 
+## 0.4.0
+
+### Minor Changes
+
+- d91e764: Refactor SharedStateService with dual format support and add comprehensive tests
+
+  - Added dual format support for legacy and new raw DOM data
+  - Created ElementProcessor service for server-side DOM processing
+  - Added comprehensive test suite with factory pattern
+  - Added DOM_ELEMENT_POINTED message type support
+  - Maintains full backward compatibility
+
+  Server ready for browser extension updates.
+
 ## 0.3.1
 
 ### Patch Changes
