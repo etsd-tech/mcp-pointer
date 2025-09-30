@@ -1,5 +1,27 @@
 # @mcp-pointer/server
 
+## 0.5.0
+
+### Minor Changes
+
+- d91e764: Refactor SharedStateService with dual format support and add comprehensive tests
+
+  - Added dual format support for legacy and new raw DOM data
+  - Created ElementProcessor service for server-side DOM processing
+  - Added comprehensive test suite with factory pattern
+  - Added DOM_ELEMENT_POINTED message type support
+  - Maintains full backward compatibility
+
+  Server ready for browser extension updates.
+
+### Patch Changes
+
+- 1c9cef4: Replace jsdom with node-html-parser for better bundling
+
+  - Reduced bundle size
+  - Fixes bundling issues with esbuild
+  - faster HTML parsing
+
 ## 0.4.4
 
 ### Patch Changes
