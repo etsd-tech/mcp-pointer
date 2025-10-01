@@ -102,7 +102,11 @@ export default class MCPService {
       };
     }
 
-    const shapedElement = shapeElementForDetail(processedElement, details.textDetail, details.cssLevel);
+    const shapedElement = shapeElementForDetail(
+      processedElement,
+      details.textDetail,
+      details.cssLevel,
+    );
 
     return {
       content: [

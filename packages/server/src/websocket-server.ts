@@ -46,10 +46,8 @@ export default class PointerWebSocketServer {
   }
 
   private handleMessage(message: PointerMessage): void {
-    if (message.type === PointerMessageType.ELEMENT_SELECTED && message.data) {
+    if (message.type === PointerMessageType.LEGACY_ELEMENT_SELECTED && message.data) {
       this.currentElement = message.data as TargetedElement;
-    } else if (message.type === PointerMessageType.ELEMENT_CLEARED) {
-      this.currentElement = null;
     }
   }
 
