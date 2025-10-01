@@ -1,5 +1,6 @@
 ---
 "@mcp-pointer/server": patch
+"@mcp-pointer/chrome-extension": patch
 ---
 
-Align server version for release
+Align versions for release
