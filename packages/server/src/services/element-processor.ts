@@ -67,13 +67,7 @@ export default class ElementProcessor {
   private getRelevantStyles(styles?: Record<string, string>): CSSProperties | undefined {
     if (!styles) return undefined;
 
-    return {
-      display: safeGet(styles, 'display', 'block'),
-      position: safeGet(styles, 'position', 'static'),
-      fontSize: safeGet(styles, 'font-size', '16px'),
-      color: safeGet(styles, 'color', 'black'),
-      backgroundColor: safeGet(styles, 'background-color', 'transparent'),
-    };
+    return { ...styles };
   }
 
   private getComponentInfo(reactFiber?: any): ComponentInfo | undefined {

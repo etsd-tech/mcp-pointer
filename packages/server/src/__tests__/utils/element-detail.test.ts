@@ -24,6 +24,8 @@ function createMockProcessedElement(): ProcessedPointedDOMElement {
       fontSize: '16px',
       color: 'rgb(0, 0, 0)',
       backgroundColor: 'rgb(255, 255, 255)',
+      marginTop: '10px',
+      paddingLeft: '5px',
     },
     cssComputed: {
       display: 'block',
