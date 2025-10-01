@@ -37,7 +37,7 @@ ConfigStorageService.onChange((newConfig: ExtensionConfig) => {
 // Listen for messages from content script
 chrome.runtime.onMessage
   .addListener((request: any, _sender: any, sendResponse: (response: any) => void) => {
-    if (request.type === 'ELEMENT_SELECTED' && request.data) {
+    if (request.type === 'DOM_ELEMENT_POINTED' && request.data) {
       // Send element with current port and status callback
       elementSender.sendElement(
         request.data,

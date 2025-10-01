@@ -1,9 +1,9 @@
-import { TargetedElement } from '@mcp-pointer/shared/types';
+import { RawPointedDOMElement } from '@mcp-pointer/shared/types';
 import logger from '../utils/logger';
 import TriggerMouseService from './trigger-mouse-service';
 import TriggerKeyService from './trigger-key-service';
 import OverlayManagerService, { OverlayType } from './overlay-manager-service';
-import { adaptTargetToElement } from '../utils/element';
+import { extractRawPointedDOMElement } from '../utils/element';
 
 const POINTING_CLASS = 'mcp-pointer--is-pointing';
 
@@ -111,8 +111,8 @@ export default class ElementPointerService {
 
     // Send directly to background script (isolated world has chrome.runtime access)
     chrome.runtime.sendMessage({
-      type: 'ELEMENT_SELECTED',
-      data: adaptTargetToElement(target) as TargetedElement,
+      type: 'DOM_ELEMENT_POINTED',
+      data: extractRawPointedDOMElement(target) as RawPointedDOMElement,
     }, (response: any) => {
       if (chrome.runtime.lastError) {
         logger.error('❌ Error sending to background:', chrome.runtime.lastError);

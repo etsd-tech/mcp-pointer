@@ -1,6 +1,6 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {
-  TargetedElement, PointerMessage, PointerMessageType, ConnectionStatus,
+  RawPointedDOMElement, PointerMessage, PointerMessageType, ConnectionStatus,
 } from '@mcp-pointer/shared/types';
 import logger from '../utils/logger';
 
@@ -26,7 +26,7 @@ export class ElementSenderService {
   private readonly MAX_RETRIES = 10; // Maximum connection retry attempts
 
   async sendElement(
-    element: TargetedElement,
+    element: RawPointedDOMElement,
     port: number,
     statusCallback?: StatusCallback,
   ): Promise<void> {
@@ -45,7 +45,7 @@ export class ElementSenderService {
       statusCallback?.(ConnectionStatus.SENDING);
 
       const message: PointerMessage = {
-        type: PointerMessageType.ELEMENT_SELECTED,
+        type: PointerMessageType.DOM_ELEMENT_POINTED,
         data: element,
         timestamp: Date.now(),
       };
