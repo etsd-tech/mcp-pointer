@@ -1,5 +1,11 @@
 # @mcp-pointer/chrome-extension
 
+## 0.5.2
+
+### Patch Changes
+
+- 6d99931: Align versions for release
+
 ## 0.5.1
 
 ### Patch Changes

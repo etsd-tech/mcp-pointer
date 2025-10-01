@@ -1,5 +1,11 @@
 # @mcp-pointer/server
 
+## 0.5.2
+
+### Patch Changes
+
+- 6d99931: Align versions for release
+
 ## 0.5.0
 
 ### Minor Changes
