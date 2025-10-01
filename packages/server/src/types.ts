@@ -21,9 +21,13 @@ export interface ProcessedPointedDOMElement {
   url: string;
   timestamp: string; // ISO format
 
-  // Optional processing
+  // Full CSS data for shaping
   cssProperties?: CSSProperties;
+  cssComputed?: Record<string, string>; // Full computed styles
   componentInfo?: ComponentInfo;
+
+  // Text content (full, including hidden nodes)
+  textContent?: string;
 
   // Processing metadata
   warnings?: string[];

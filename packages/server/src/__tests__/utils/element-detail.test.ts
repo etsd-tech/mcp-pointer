@@ -4,7 +4,40 @@ import {
   normalizeTextDetail,
   shapeElementForDetail,
 } from '../../utils/element-detail';
-import { createMockElement } from '../test-helpers';
+import { ProcessedPointedDOMElement } from '../../types';
+
+function createMockProcessedElement(): ProcessedPointedDOMElement {
+  return {
+    selector: 'div.test-element',
+    tagName: 'DIV',
+    id: 'test-id',
+    classes: ['test-class'],
+    innerText: 'Visible text',
+    textContent: 'Visible text with hidden content',
+    attributes: { 'data-test': 'true' },
+    position: {
+      x: 100, y: 200, width: 300, height: 50,
+    },
+    cssProperties: {
+      display: 'block',
+      position: 'relative',
+      fontSize: '16px',
+      color: 'rgb(0, 0, 0)',
+      backgroundColor: 'rgb(255, 255, 255)',
+    },
+    cssComputed: {
+      display: 'block',
+      position: 'relative',
+      fontSize: '16px',
+      color: 'rgb(0, 0, 0)',
+      backgroundColor: 'rgb(255, 255, 255)',
+      marginTop: '10px',
+      paddingLeft: '5px',
+    },
+    timestamp: new Date().toISOString(),
+    url: 'https://example.com',
+  };
+}
 
 describe('element-detail utilities', () => {
   describe('normalizeTextDetail', () => {
@@ -41,19 +74,18 @@ describe('element-detail utilities', () => {
 
   describe('shapeElementForDetail', () => {
     it('omits text and css when levels request none', () => {
-      const element = createMockElement();
+      const element = createMockProcessedElement();
       const shaped = shapeElementForDetail(element, 'none', 0);
 
-      expect(shaped.innerText).toBeUndefined();
+      expect(shaped.innerText).toBe('');
       expect(shaped.textContent).toBeUndefined();
       expect(shaped.cssProperties).toBeUndefined();
-      expect(shaped.cssLevel).toBe(0);
     });
 
     it('returns visible text and level 1 css subset', () => {
-      const element = createMockElement();
-      element.textVariants!.visible = 'Visible text only';
-      element.textVariants!.full = 'Visible text only with hidden';
+      const element = createMockProcessedElement();
+      element.innerText = 'Visible text only';
+      element.textContent = 'Visible text only with hidden';
       const shaped = shapeElementForDetail(element, 'visible', 1);
 
       expect(shaped.innerText).toBe('Visible text only');
@@ -64,17 +96,11 @@ describe('element-detail utilities', () => {
     });
 
     it('returns full css when level 3 requested', () => {
-      const element = createMockElement();
-      element.cssComputed = {
-        ...element.cssProperties!,
-        marginTop: '5px',
-      };
-
+      const element = createMockProcessedElement();
       const shaped = shapeElementForDetail(element, 'full', 3);
-      expect(shaped.cssProperties).toEqual({
-        ...element.cssComputed,
-      });
-      expect(shaped.textContent).toBe(element.textVariants!.full);
+
+      expect(shaped.cssProperties).toEqual(element.cssComputed);
+      expect(shaped.textContent).toBe(element.textContent);
     });
   });
 });

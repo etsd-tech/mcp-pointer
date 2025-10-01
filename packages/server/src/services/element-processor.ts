@@ -26,6 +26,7 @@ export default class ElementProcessor {
       classes: element ? Array.from(element.classList) : [],
       attributes: element ? this.getAttributes(element) : {},
       innerText: element?.textContent || '',
+      textContent: element?.textContent || undefined,
       selector: element ? generateSelector(element) : 'unknown',
 
       position: this.getPosition(raw.boundingClientRect),
@@ -33,6 +34,7 @@ export default class ElementProcessor {
       timestamp: new Date(raw.timestamp).toISOString(),
 
       cssProperties: this.getRelevantStyles(raw.computedStyles),
+      cssComputed: raw.computedStyles ? { ...raw.computedStyles } : undefined,
       componentInfo: this.getComponentInfo(raw.reactFiber),
 
       warnings: allWarnings.length > 0 ? allWarnings : undefined,

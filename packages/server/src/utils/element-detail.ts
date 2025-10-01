@@ -3,15 +3,14 @@ import {
   CSSProperties,
   DEFAULT_CSS_LEVEL,
   DEFAULT_TEXT_DETAIL,
-  TargetedElement,
   TextDetailLevel,
-  TextSnapshots,
 } from '@mcp-pointer/shared/types';
 import {
   CSS_LEVEL_FIELD_MAP,
   isValidCSSLevel,
   isValidTextDetail,
 } from '@mcp-pointer/shared/detail';
+import { ProcessedPointedDOMElement } from '../types';
 
 export interface DetailParameters {
   textDetail?: unknown;
@@ -88,18 +87,8 @@ export function normalizeDetailParameters(
   };
 }
 
-function resolveTextVariants(element: TargetedElement): TextSnapshots {
-  const visible = element.textVariants?.visible ?? element.innerText ?? '';
-  const full = element.textVariants?.full ?? element.textContent ?? visible;
-
-  return {
-    visible,
-    full,
-  };
-}
-
 function resolveTextContent(
-  variants: TextSnapshots,
+  element: ProcessedPointedDOMElement,
   detail: TextDetailLevel,
 ): string | undefined {
   if (detail === 'none') {
@@ -107,14 +96,15 @@ function resolveTextContent(
   }
 
   if (detail === 'visible') {
-    return variants.visible;
+    return element.innerText;
   }
 
-  return variants.full || variants.visible;
+  // 'full' - return textContent if available, otherwise innerText
+  return element.textContent ?? element.innerText;
 }
 
 function buildCssProperties(
-  element: TargetedElement,
+  element: ProcessedPointedDOMElement,
   cssLevel: CSSDetailLevel,
 ): CSSProperties | undefined {
   if (cssLevel === 0) {
@@ -156,33 +146,27 @@ function buildCssProperties(
 }
 
 export function shapeElementForDetail(
-  element: TargetedElement,
+  element: ProcessedPointedDOMElement,
   detail: TextDetailLevel,
   cssLevel: CSSDetailLevel,
-): TargetedElement {
-  const variants = resolveTextVariants(element);
-  const resolvedText = resolveTextContent(variants, detail);
-  const textContent = detail === 'full' ? variants.full : undefined;
+): ProcessedPointedDOMElement {
+  const resolvedText = resolveTextContent(element, detail);
+  const textContent = detail === 'full' ? element.textContent : undefined;
   const cssProperties = buildCssProperties(element, cssLevel);
 
-  const shaped: TargetedElement = {
+  const shaped: ProcessedPointedDOMElement = {
     selector: element.selector,
     tagName: element.tagName,
     id: element.id,
     classes: [...element.classes],
     attributes: { ...element.attributes },
     position: { ...element.position },
-    cssLevel,
     componentInfo: element.componentInfo ? { ...element.componentInfo } : undefined,
     timestamp: element.timestamp,
     url: element.url,
-    tabId: element.tabId,
-    textDetail: detail,
+    innerText: resolvedText ?? '',
+    warnings: element.warnings,
   };
-
-  if (resolvedText !== undefined) {
-    shaped.innerText = resolvedText;
-  }
 
   if (textContent !== undefined) {
     shaped.textContent = textContent;
