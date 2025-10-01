@@ -1,5 +1,17 @@
 # @mcp-pointer/chrome-extension
 
+## 0.5.1
+
+### Patch Changes
+
+- 155a07c: Send raw DOM element data for server-side processing
+
+  - Add extractRawPointedDOMElement() to collect minimal raw DOM data
+  - Send outerHTML, boundingClientRect, url, timestamp, computedStyles
+  - Include React Fiber when present on element
+  - Use DOM_ELEMENT_POINTED message type
+  - Move data processing responsibility to server
+
 ## 0.5.0
 
 ### Patch Changes
