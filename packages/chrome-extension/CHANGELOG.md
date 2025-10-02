@@ -20,6 +20,10 @@
 
 ## 0.5.0
 
+### Minor Changes
+
+- Added dynamic context control (text detail & css levels)
+
 ### Patch Changes
 
 - Updated dependencies [d91e764]

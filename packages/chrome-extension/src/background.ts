@@ -67,6 +67,7 @@ chrome.runtime.onMessage
       );
 
       sendResponse({ success: true });
+      return true; // Keep message channel open for async response
     }
   });
 

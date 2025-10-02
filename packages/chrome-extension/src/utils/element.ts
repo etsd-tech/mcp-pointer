@@ -2,14 +2,123 @@
 /* eslint-disable no-underscore-dangle */
 
 import {
-  ComponentInfo, CSSProperties, ElementPosition, TargetedElement, RawPointedDOMElement,
+  ComponentInfo,
+  CSSDetailLevel,
+  CSSProperties,
+  DEFAULT_CSS_LEVEL,
+  DEFAULT_TEXT_DETAIL,
+  ElementPosition,
+  TargetedElement,
+  TextDetailLevel,
+  TextSnapshots,
+  RawPointedDOMElement,
 } from '@mcp-pointer/shared/types';
+import { CSS_LEVEL_FIELD_MAP } from '@mcp-pointer/shared/detail';
 import logger from './logger';
 
 export interface ReactSourceInfo {
   fileName: string;
   lineNumber?: number;
   columnNumber?: number;
+}
+
+export interface ElementSerializationOptions {
+  textDetail?: TextDetailLevel;
+  cssLevel?: CSSDetailLevel;
+}
+
+function toKebabCase(property: string): string {
+  return property
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/_/g, '-')
+    .toLowerCase();
+}
+
+function toCamelCase(property: string): string {
+  return property
+    .replace(/^-+/, '')
+    .replace(/-([a-z])/g, (_, char: string) => char.toUpperCase());
+}
+
+function getStyleValue(style: CSSStyleDeclaration, property: string): string | undefined {
+  const camelValue = (style as any)[property];
+  if (typeof camelValue === 'string' && camelValue.trim().length > 0) {
+    return camelValue;
+  }
+
+  const kebab = toKebabCase(property);
+  const value = style.getPropertyValue(kebab);
+  if (typeof value === 'string' && value.trim().length > 0) {
+    return value;
+  }
+
+  return undefined;
+}
+
+function extractFullCSSProperties(style: CSSStyleDeclaration): Record<string, string> {
+  const properties: Record<string, string> = {};
+
+  for (let i = 0; i < style.length; i += 1) {
+    const property = style.item(i);
+
+    if (property && !property.startsWith('-')) {
+      const value = style.getPropertyValue(property);
+      if (typeof value === 'string' && value.trim().length > 0) {
+        const camel = toCamelCase(property);
+        properties[camel] = value;
+      }
+    }
+  }
+
+  return properties;
+}
+
+function getElementCSSProperties(
+  style: CSSStyleDeclaration,
+  cssLevel: CSSDetailLevel,
+  fullCSS: Record<string, string>,
+): CSSProperties | undefined {
+  if (cssLevel === 0) {
+    return undefined;
+  }
+
+  if (cssLevel === 3) {
+    return fullCSS;
+  }
+
+  const fields = CSS_LEVEL_FIELD_MAP[cssLevel];
+  const properties: CSSProperties = {};
+
+  fields.forEach((property) => {
+    const value = getStyleValue(style, property);
+    if (value !== undefined) {
+      properties[property] = value;
+    }
+  });
+
+  return properties;
+}
+
+function collectTextVariants(element: HTMLElement): TextSnapshots {
+  const visible = element.innerText || '';
+  const full = element.textContent || visible;
+
+  return {
+    visible,
+    full,
+  };
+}
+
+function resolveTextByDetail(variants: TextSnapshots, detail: TextDetailLevel): string | undefined {
+  if (detail === 'none') {
+    return undefined;
+  }
+
+  if (detail === 'visible') {
+    return variants.visible;
+  }
+
+  return variants.full || variants.visible;
 }
 
 /**
@@ -173,20 +282,6 @@ export function getElementPosition(element: HTMLElement): ElementPosition {
 }
 
 /**
- * Extract relevant CSS properties from an element
- */
-export function getElementCSSProperties(element: HTMLElement): CSSProperties {
-  const computedStyle = window.getComputedStyle(element);
-  return {
-    display: computedStyle.display,
-    position: computedStyle.position,
-    fontSize: computedStyle.fontSize,
-    color: computedStyle.color,
-    backgroundColor: computedStyle.backgroundColor,
-  };
-}
-
-/**
  * Extract CSS classes from an element as an array
  */
 export function getElementClasses(element: HTMLElement): string[] {
@@ -197,20 +292,47 @@ export function getElementClasses(element: HTMLElement): string[] {
   return classNameStr.split(' ').filter((c: string) => c.trim());
 }
 
-export function adaptTargetToElement(element: HTMLElement): TargetedElement {
-  return {
+export function adaptTargetToElement(
+  element: HTMLElement,
+  options: ElementSerializationOptions = {},
+): TargetedElement {
+  const textDetail = options.textDetail ?? DEFAULT_TEXT_DETAIL;
+  const cssLevel = options.cssLevel ?? DEFAULT_CSS_LEVEL;
+
+  const textVariants = collectTextVariants(element);
+  const resolvedText = resolveTextByDetail(textVariants, textDetail);
+
+  const computedStyle = window.getComputedStyle(element);
+  const fullCSS = extractFullCSSProperties(computedStyle);
+  const cssProperties = getElementCSSProperties(computedStyle, cssLevel, fullCSS);
+
+  const target: TargetedElement = {
     selector: generateSelector(element),
     tagName: element.tagName,
     id: element.id || undefined,
     classes: getElementClasses(element),
-    innerText: element.innerText || element.textContent || '',
     attributes: getElementAttributes(element),
     position: getElementPosition(element),
-    cssProperties: getElementCSSProperties(element),
+    cssLevel,
+    cssProperties,
+    cssComputed: Object.keys(fullCSS).length > 0 ? fullCSS : undefined,
     componentInfo: getReactFiberInfo(element),
     timestamp: Date.now(),
     url: window.location.href,
+    textDetail,
+    textVariants,
+    textContent: textVariants.full,
   };
+
+  if (resolvedText !== undefined) {
+    target.innerText = resolvedText;
+  }
+
+  if (!target.textContent && textVariants.visible) {
+    target.textContent = textVariants.visible;
+  }
+
+  return target;
 }
 
 /**

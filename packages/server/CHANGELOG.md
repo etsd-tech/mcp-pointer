@@ -20,6 +20,8 @@
 
   Server ready for browser extension updates.
 
+- Added dynamic context control (text detail & css levels)
+
 ### Patch Changes
 
 - 1c9cef4: Replace jsdom with node-html-parser for better bundling

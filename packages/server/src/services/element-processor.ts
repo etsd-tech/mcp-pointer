@@ -26,6 +26,7 @@ export default class ElementProcessor {
       classes: element ? Array.from(element.classList) : [],
       attributes: element ? this.getAttributes(element) : {},
       innerText: element?.textContent || '',
+      textContent: element?.textContent || undefined,
       selector: element ? generateSelector(element) : 'unknown',
 
       position: this.getPosition(raw.boundingClientRect),
@@ -33,6 +34,7 @@ export default class ElementProcessor {
       timestamp: new Date(raw.timestamp).toISOString(),
 
       cssProperties: this.getRelevantStyles(raw.computedStyles),
+      cssComputed: raw.computedStyles ? { ...raw.computedStyles } : undefined,
       componentInfo: this.getComponentInfo(raw.reactFiber),
 
       warnings: allWarnings.length > 0 ? allWarnings : undefined,
@@ -65,13 +67,7 @@ export default class ElementProcessor {
   private getRelevantStyles(styles?: Record<string, string>): CSSProperties | undefined {
     if (!styles) return undefined;
 
-    return {
-      display: safeGet(styles, 'display', 'block'),
-      position: safeGet(styles, 'position', 'static'),
-      fontSize: safeGet(styles, 'font-size', '16px'),
-      color: safeGet(styles, 'color', 'black'),
-      backgroundColor: safeGet(styles, 'background-color', 'transparent'),
-    };
+    return { ...styles };
   }
 
   private getComponentInfo(reactFiber?: any): ComponentInfo | undefined {

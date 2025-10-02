@@ -62,9 +62,16 @@ packages/
 ├── server/              # @mcp-pointer/server - MCP Server (TypeScript)
 │   ├── src/
 │   │   ├── start.ts      # Main server entry point
-│   │   ├── cli.ts        # Command line interface  
-│   │   ├── websocket-server.ts
-│   │   └── mcp-handler.ts
+│   │   ├── cli.ts        # Command line interface
+│   │   ├── message-handler.ts  # Message routing & state building
+│   │   ├── services/
+│   │   │   ├── websocket-service.ts      # WebSocket with leader election
+│   │   │   ├── mcp-service.ts            # MCP protocol handler
+│   │   │   ├── element-processor.ts      # Raw→Processed conversion
+│   │   │   └── shared-state-service.ts   # State persistence
+│   │   └── utils/
+│   │       ├── dom-extractor.ts    # HTML parsing utilities
+│   │       └── element-detail.ts   # Dynamic CSS/text filtering
 │   ├── dist/
 │   │   └── cli.cjs       # Bundled standalone CLI
 │   └── package.json
@@ -73,15 +80,17 @@ packages/
 │   ├── src/
 │   │   ├── background.ts # Service worker
 │   │   ├── content.ts    # Element selection
-│   │   └── element-sender-service.ts
+│   │   └── services/
+│   │       └── element-sender-service.ts  # WebSocket client
 │   ├── dev/              # Development build (with logging)
 │   ├── dist/             # Production build (minified)
 │   └── manifest.json
 │
 └── shared/             # @mcp-pointer/shared - Shared TypeScript types
     ├── src/
-    │   ├── Logger.ts
-    │   └── types.ts
+    │   ├── logger.ts
+    │   ├── types.ts
+    │   └── detail.ts   # CSS/text detail level constants
     └── package.json
 ```
 
@@ -119,9 +128,16 @@ packages/
 ├── server/              # @mcp-pointer/server - MCP Server (TypeScript)
 │   ├── src/
 │   │   ├── start.ts      # Main server entry point
-│   │   ├── cli.ts        # Command line interface  
-│   │   ├── websocket-server.ts
-│   │   └── mcp-handler.ts
+│   │   ├── cli.ts        # Command line interface
+│   │   ├── message-handler.ts  # Message routing & state building
+│   │   ├── services/
+│   │   │   ├── websocket-service.ts      # WebSocket with leader election
+│   │   │   ├── mcp-service.ts            # MCP protocol handler
+│   │   │   ├── element-processor.ts      # Raw→Processed conversion
+│   │   │   └── shared-state-service.ts   # State persistence
+│   │   └── utils/
+│   │       ├── dom-extractor.ts    # HTML parsing utilities
+│   │       └── element-detail.ts   # Dynamic CSS/text filtering
 │   ├── dist/
 │   │   └── cli.cjs       # Bundled standalone CLI
 │   └── package.json
@@ -130,15 +146,17 @@ packages/
 │   ├── src/
 │   │   ├── background.ts # Service worker
 │   │   ├── content.ts    # Element selection
-│   │   └── element-sender-service.ts
+│   │   └── services/
+│   │       └── element-sender-service.ts  # WebSocket client
 │   ├── dev/              # Development build (with logging)
 │   ├── dist/             # Production build (minified)
 │   └── manifest.json
 │
 └── shared/             # @mcp-pointer/shared - Shared TypeScript types
     ├── src/
-    │   ├── Logger.ts
-    │   └── types.ts
+    │   ├── logger.ts
+    │   ├── types.ts
+    │   └── detail.ts   # CSS/text detail level constants
     └── package.json
 ```
 

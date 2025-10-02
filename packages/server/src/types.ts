@@ -3,7 +3,6 @@ import {
   CSSProperties,
   ComponentInfo,
   RawPointedDOMElement,
-  TargetedElement,
 } from '@mcp-pointer/shared/types';
 
 // Server-processed data (extracted & enhanced)
@@ -21,24 +20,19 @@ export interface ProcessedPointedDOMElement {
   url: string;
   timestamp: string; // ISO format
 
-  // Optional processing
+  // Full CSS data for shaping
   cssProperties?: CSSProperties;
+  cssComputed?: Record<string, string>; // Full computed styles
   componentInfo?: ComponentInfo;
+
+  // Text content (full, including hidden nodes)
+  textContent?: string;
 
   // Processing metadata
   warnings?: string[];
 }
 
-// Version-specific data types
-export interface StateDataV1 {
-  rawPointedDOMElement: TargetedElement;
-  processedPointedDOMElement: ProcessedPointedDOMElement;
-  metadata: {
-    receivedAt: string;
-    messageType: string;
-  };
-}
-
+// State data structure
 export interface StateDataV2 {
   rawPointedDOMElement: RawPointedDOMElement;
   processedPointedDOMElement: ProcessedPointedDOMElement;
@@ -48,11 +42,8 @@ export interface StateDataV2 {
   };
 }
 
-// Storage format with versioned data
+// Storage format
 export interface SharedState {
-  stateVersion: number;
-  data: StateDataV1 | StateDataV2;
+  stateVersion: 2;
+  data: StateDataV2;
 }
-
-// Legacy format alias
-export type LegacySharedState = TargetedElement;
