@@ -1,6 +1,6 @@
 // Simple safe getter function (replaces lodash.get)
 import {
-  RawPointedDOMElement, ElementPosition, CSSProperties, ComponentInfo,
+  RawPointedDOMElement, ElementPosition, ComponentInfo,
 } from '@mcp-pointer/shared/types';
 import { ProcessedPointedDOMElement } from '../types';
 import { extractFromHTML, generateSelector } from '../utils/dom-extractor';
@@ -33,7 +33,6 @@ export default class ElementProcessor {
       url: raw.url,
       timestamp: new Date(raw.timestamp).toISOString(),
 
-      cssProperties: this.getRelevantStyles(raw.computedStyles),
       cssComputed: raw.computedStyles ? { ...raw.computedStyles } : undefined,
       componentInfo: this.getComponentInfo(raw.reactFiber),
 
@@ -62,12 +61,6 @@ export default class ElementProcessor {
       width: safeGet(rect, 'width', 0),
       height: safeGet(rect, 'height', 0),
     };
-  }
-
-  private getRelevantStyles(styles?: Record<string, string>): CSSProperties | undefined {
-    if (!styles) return undefined;
-
-    return { ...styles };
   }
 
   private getComponentInfo(reactFiber?: any): ComponentInfo | undefined {

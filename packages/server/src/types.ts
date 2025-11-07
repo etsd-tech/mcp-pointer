@@ -21,7 +21,6 @@ export interface ProcessedPointedDOMElement {
   timestamp: string; // ISO format
 
   // Full CSS data for shaping
-  cssProperties?: CSSProperties;
   cssComputed?: Record<string, string>; // Full computed styles
   componentInfo?: ComponentInfo;
 
@@ -32,8 +31,24 @@ export interface ProcessedPointedDOMElement {
   warnings?: string[];
 }
 
+export interface SerializedDOMElement {
+  selector: string;
+  tagName: string;
+  id?: string;
+  classes: string[];
+  attributes: Record<string, string>;
+  position: ElementPosition;
+  url: string;
+  timestamp: string;
+  innerText: string;
+  textContent?: string;
+  cssProperties?: CSSProperties;
+  componentInfo?: ComponentInfo;
+  warnings?: string[];
+}
+
 // State data structure
-export interface StateDataV2 {
+export interface SharedStateData {
   rawPointedDOMElement: RawPointedDOMElement;
   processedPointedDOMElement: ProcessedPointedDOMElement;
   metadata: {
@@ -44,6 +59,5 @@ export interface StateDataV2 {
 
 // Storage format
 export interface SharedState {
-  stateVersion: 2;
-  data: StateDataV2;
+  data: SharedStateData;
 }

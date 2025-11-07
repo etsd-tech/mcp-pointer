@@ -9,7 +9,7 @@ import { CSS_DETAIL_OPTIONS, TEXT_DETAIL_OPTIONS } from '@mcp-pointer/shared/det
 import SharedStateService from './shared-state-service';
 import {
   normalizeDetailParameters,
-  shapeElementForDetail,
+  serializeElement,
   type DetailParameters,
   type NormalizedDetailParameters,
 } from '../utils/element-detail';
@@ -54,14 +54,14 @@ export default class MCPService {
       tools: [
         {
           name: MCPToolName.GET_POINTED_ELEMENT,
-          description: 'Get information about the currently pointed/shown DOM element. Control returned payload size with optional textDetail (full|visible|none) and cssLevel (0-3).',
+          description: 'Get information about the currently pointed/shown DOM element. Control returned payload size with optional textDetail (0 none | 1 visible | 2 full) and cssLevel (0-3).',
           inputSchema: {
             type: 'object',
             properties: {
               textDetail: {
-                type: 'string',
+                type: 'integer',
                 enum: [...TEXT_DETAIL_OPTIONS],
-                description: 'Controls how much text is returned. full (default) includes hidden text fallback, visible uses only rendered text, none omits text fields.',
+                description: 'Controls how much text is returned. 2 (default) includes hidden text fallback, 1 uses only rendered text, 0 omits text fields.',
               },
               cssLevel: {
                 type: 'integer',
@@ -102,7 +102,7 @@ export default class MCPService {
       };
     }
 
-    const shapedElement = shapeElementForDetail(
+    const shapedElement = serializeElement(
       processedElement,
       details.textDetail,
       details.cssLevel,

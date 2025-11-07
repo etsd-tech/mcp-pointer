@@ -1,6 +1,6 @@
 import { RawPointedDOMElement, PointerMessageType } from '@mcp-pointer/shared/types';
 import {
-  SharedState, StateDataV2, ProcessedPointedDOMElement,
+  SharedState, SharedStateData, ProcessedPointedDOMElement,
 } from '../../types';
 
 export const createProcessedElement = (
@@ -39,11 +39,10 @@ export const createRawElement = (
   ...overrides,
 });
 
-export const createStateV2 = (
+export const createSharedState = (
   rawOverrides: Partial<RawPointedDOMElement> = {},
   processedOverrides: Partial<ProcessedPointedDOMElement> = {},
 ): SharedState => ({
-  stateVersion: 2,
   data: {
     rawPointedDOMElement: createRawElement(rawOverrides),
     processedPointedDOMElement: createProcessedElement(processedOverrides),
@@ -51,5 +50,5 @@ export const createStateV2 = (
       receivedAt: '2023-01-01T00:00:00.000Z',
       messageType: PointerMessageType.DOM_ELEMENT_POINTED,
     },
-  } as StateDataV2,
+  } as SharedStateData,
 });

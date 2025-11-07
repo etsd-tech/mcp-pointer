@@ -2,7 +2,7 @@ import { PointerMessageType, type RawPointedDOMElement } from '@mcp-pointer/shar
 import logger from './logger';
 import ElementProcessor from './services/element-processor';
 import SharedStateService from './services/shared-state-service';
-import { SharedState, StateDataV2 } from './types';
+import { SharedState, SharedStateData } from './types';
 
 function buildMetadata(messageType: string) {
   const now = new Date().toISOString();
@@ -22,14 +22,13 @@ function buildState(
   const raw = data as RawPointedDOMElement;
   const processed = elementProcessor.processFromRaw(raw);
 
-  const stateData: StateDataV2 = {
+  const stateData: SharedStateData = {
     rawPointedDOMElement: raw,
     processedPointedDOMElement: processed,
     metadata: buildMetadata(type),
   };
 
   return {
-    stateVersion: 2,
     data: stateData,
   };
 }
