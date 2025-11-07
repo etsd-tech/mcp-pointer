@@ -104,7 +104,7 @@ Your AI tool will automatically start the MCP server when needed using the `npx 
 
 **Available MCP Tool:**
 - `get-pointed-element` – Returns textual information about the currently pointed DOM element. Optional arguments:
-  - `textDetail`: `"full" | "visible" | "none"` (default `"full"`) controls how much text to include.
+  - `textDetail`: `0 | 1 | 2` (default `2`) controls how much text to include (`0 = none`, `1 = visible text only`, `2 = visible + hidden`).
   - `cssLevel`: `0 | 1 | 2 | 3` (default `1`) controls styling detail, from no CSS (0) up to full computed styles (3).
 
 ## 🎯 How It Works
