@@ -10,7 +10,7 @@ import {
   isValidCSSLevel,
   isValidTextDetail,
 } from '@mcp-pointer/shared/detail';
-import { ProcessedPointedDOMElement } from '../types';
+import { ProcessedPointedDOMElement, SerializedDOMElement } from '../types';
 
 export interface DetailParameters {
   textDetail?: unknown;
@@ -37,6 +37,17 @@ function toNumber(value: unknown): number | null {
   return null;
 }
 
+const TEXT_DETAIL_ALIAS_MAP: Record<string, TextDetailLevel> = {
+  full: TextDetailLevel.FULL,
+  visible: TextDetailLevel.VISIBLE,
+  none: TextDetailLevel.NONE,
+};
+
+function fromTextDetailAlias(value: string): TextDetailLevel | null {
+  const normalized = value.trim().toLowerCase();
+  return TEXT_DETAIL_ALIAS_MAP[normalized] ?? null;
+}
+
 export function normalizeTextDetail(
   detail: unknown,
   fallback: TextDetailLevel = DEFAULT_TEXT_DETAIL,
@@ -46,9 +57,14 @@ export function normalizeTextDetail(
   }
 
   if (typeof detail === 'string') {
-    const lowered = detail.toLowerCase();
-    if (isValidTextDetail(lowered)) {
-      return lowered as TextDetailLevel;
+    const alias = fromTextDetailAlias(detail);
+    if (alias !== null) {
+      return alias;
+    }
+
+    const parsed = toNumber(detail);
+    if (parsed !== null && isValidTextDetail(parsed)) {
+      return parsed;
     }
   }
 
@@ -91,15 +107,15 @@ function resolveTextContent(
   element: ProcessedPointedDOMElement,
   detail: TextDetailLevel,
 ): string | undefined {
-  if (detail === 'none') {
+  if (detail === TextDetailLevel.NONE) {
     return undefined;
   }
 
-  if (detail === 'visible') {
+  if (detail === TextDetailLevel.VISIBLE) {
     return element.innerText;
   }
 
-  // 'full' - return textContent if available, otherwise innerText
+  // Full detail returns textContent if available, otherwise falls back to innerText
   return element.textContent ?? element.innerText;
 }
 
@@ -107,17 +123,13 @@ function buildCssProperties(
   element: ProcessedPointedDOMElement,
   cssLevel: CSSDetailLevel,
 ): CSSProperties | undefined {
-  if (cssLevel === 0) {
+  if (cssLevel === CSSDetailLevel.NONE) {
     return undefined;
   }
 
-  if (cssLevel === 3) {
+  if (cssLevel === CSSDetailLevel.FULL) {
     if (element.cssComputed) {
       return { ...element.cssComputed };
-    }
-
-    if (element.cssProperties) {
-      return { ...element.cssProperties };
     }
 
     return undefined;
@@ -125,7 +137,7 @@ function buildCssProperties(
 
   const fields = CSS_LEVEL_FIELD_MAP[cssLevel];
   const cssProperties: CSSProperties = {};
-  const source = element.cssComputed ?? element.cssProperties ?? {};
+  const source = element.cssComputed ?? {};
 
   fields.forEach((property) => {
     const value = source[property];
@@ -138,23 +150,23 @@ function buildCssProperties(
     return cssProperties;
   }
 
-  if (element.cssProperties) {
-    return { ...element.cssProperties };
+  if (element.cssComputed) {
+    return { ...element.cssComputed };
   }
 
   return undefined;
 }
 
-export function shapeElementForDetail(
+export function serializeElement(
   element: ProcessedPointedDOMElement,
   detail: TextDetailLevel,
   cssLevel: CSSDetailLevel,
-): ProcessedPointedDOMElement {
+): SerializedDOMElement {
   const resolvedText = resolveTextContent(element, detail);
-  const textContent = detail === 'full' ? element.textContent : undefined;
+  const textContent = detail === TextDetailLevel.FULL ? element.textContent : undefined;
   const cssProperties = buildCssProperties(element, cssLevel);
 
-  const shaped: ProcessedPointedDOMElement = {
+  const shaped: SerializedDOMElement = {
     selector: element.selector,
     tagName: element.tagName,
     id: element.id,

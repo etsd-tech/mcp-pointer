@@ -1,8 +1,9 @@
+import { CSSDetailLevel, TextDetailLevel } from '@mcp-pointer/shared/types';
 import {
   normalizeDetailParameters,
   normalizeCssLevel,
   normalizeTextDetail,
-  shapeElementForDetail,
+  serializeElement,
 } from '../../utils/element-detail';
 import { ProcessedPointedDOMElement } from '../../types';
 
@@ -17,15 +18,6 @@ function createMockProcessedElement(): ProcessedPointedDOMElement {
     attributes: { 'data-test': 'true' },
     position: {
       x: 100, y: 200, width: 300, height: 50,
-    },
-    cssProperties: {
-      display: 'block',
-      position: 'relative',
-      fontSize: '16px',
-      color: 'rgb(0, 0, 0)',
-      backgroundColor: 'rgb(255, 255, 255)',
-      marginTop: '10px',
-      paddingLeft: '5px',
     },
     cssComputed: {
       display: 'block',
@@ -44,40 +36,44 @@ function createMockProcessedElement(): ProcessedPointedDOMElement {
 describe('element-detail utilities', () => {
   describe('normalizeTextDetail', () => {
     it('returns defaults for invalid values', () => {
-      expect(normalizeTextDetail(undefined)).toBe('full');
-      expect(normalizeTextDetail('VISIBLE')).toBe('visible');
-      expect(normalizeTextDetail('invalid', 'visible')).toBe('visible');
+      expect(normalizeTextDetail(undefined)).toBe(TextDetailLevel.FULL);
+      expect(normalizeTextDetail('VISIBLE')).toBe(TextDetailLevel.VISIBLE);
+      expect(normalizeTextDetail('invalid', TextDetailLevel.VISIBLE)).toBe(TextDetailLevel.VISIBLE);
     });
   });
 
   describe('normalizeCssLevel', () => {
     it('coerces numeric strings and falls back to default', () => {
-      expect(normalizeCssLevel('2')).toBe(2);
-      expect(normalizeCssLevel('not-a-number', 3)).toBe(3);
-      expect(normalizeCssLevel(undefined)).toBe(1);
+      expect(normalizeCssLevel('2')).toBe(CSSDetailLevel.BOX_MODEL);
+      expect(normalizeCssLevel('not-a-number', CSSDetailLevel.FULL)).toBe(CSSDetailLevel.FULL);
+      expect(normalizeCssLevel(undefined)).toBe(CSSDetailLevel.BASIC);
     });
   });
 
   describe('normalizeDetailParameters', () => {
     it('applies defaults when params are missing', () => {
       expect(normalizeDetailParameters(undefined)).toEqual({
-        textDetail: 'full',
-        cssLevel: 1,
+        textDetail: TextDetailLevel.FULL,
+        cssLevel: CSSDetailLevel.BASIC,
       });
     });
 
     it('normalizes provided params', () => {
       expect(normalizeDetailParameters({ textDetail: 'visible', cssLevel: '0' })).toEqual({
-        textDetail: 'visible',
-        cssLevel: 0,
+        textDetail: TextDetailLevel.VISIBLE,
+        cssLevel: CSSDetailLevel.NONE,
       });
     });
   });
 
-  describe('shapeElementForDetail', () => {
+  describe('serializeElement', () => {
     it('omits text and css when levels request none', () => {
       const element = createMockProcessedElement();
-      const shaped = shapeElementForDetail(element, 'none', 0);
+      const shaped = serializeElement(
+        element,
+        TextDetailLevel.NONE,
+        CSSDetailLevel.NONE,
+      );
 
       expect(shaped.innerText).toBe('');
       expect(shaped.textContent).toBeUndefined();
@@ -88,7 +84,11 @@ describe('element-detail utilities', () => {
       const element = createMockProcessedElement();
       element.innerText = 'Visible text only';
       element.textContent = 'Visible text only with hidden';
-      const shaped = shapeElementForDetail(element, 'visible', 1);
+      const shaped = serializeElement(
+        element,
+        TextDetailLevel.VISIBLE,
+        CSSDetailLevel.BASIC,
+      );
 
       expect(shaped.innerText).toBe('Visible text only');
       expect(shaped.textContent).toBeUndefined();
@@ -99,7 +99,11 @@ describe('element-detail utilities', () => {
 
     it('returns full css when level 3 requested', () => {
       const element = createMockProcessedElement();
-      const shaped = shapeElementForDetail(element, 'full', 3);
+      const shaped = serializeElement(
+        element,
+        TextDetailLevel.FULL,
+        CSSDetailLevel.FULL,
+      );
 
       expect(shaped.cssProperties).toEqual(element.cssComputed);
       expect(shaped.textContent).toBe(element.textContent);

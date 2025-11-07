@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { TargetedElement } from '@mcp-pointer/shared/types';
+import { TargetedElement, TextDetailLevel, CSSDetailLevel } from '@mcp-pointer/shared/types';
 
 // Test constants - use a temp directory that works in Jest
 export const TEST_MCP_POINTER_PORT = 7008;
@@ -33,7 +33,7 @@ export function createMockElement(): TargetedElement {
     classes: ['test-class'],
     innerText: text,
     textContent: text,
-    textDetail: 'full',
+    textDetail: TextDetailLevel.FULL,
     textVariants: {
       visible: text,
       full: text,
@@ -42,7 +42,7 @@ export function createMockElement(): TargetedElement {
     position: {
       x: 100, y: 200, width: 300, height: 50,
     },
-    cssLevel: 1,
+    cssLevel: CSSDetailLevel.BASIC,
     cssProperties: {
       display: 'block',
       position: 'relative',

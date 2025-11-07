@@ -1,10 +1,19 @@
-export type TextDetailLevel = 'full' | 'visible' | 'none';
+export enum TextDetailLevel {
+  NONE = 0,
+  VISIBLE = 1,
+  FULL = 2,
+}
 
-export type CSSDetailLevel = 0 | 1 | 2 | 3;
+export enum CSSDetailLevel {
+  NONE = 0,
+  BASIC = 1,
+  BOX_MODEL = 2,
+  FULL = 3,
+}
 
-export const DEFAULT_TEXT_DETAIL: TextDetailLevel = 'full';
+export const DEFAULT_TEXT_DETAIL: TextDetailLevel = TextDetailLevel.FULL;
 
-export const DEFAULT_CSS_LEVEL: CSSDetailLevel = 1;
+export const DEFAULT_CSS_LEVEL: CSSDetailLevel = CSSDetailLevel.BASIC;
 
 export interface TextSnapshots {
   visible: string;

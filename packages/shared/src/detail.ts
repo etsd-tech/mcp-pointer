@@ -1,8 +1,16 @@
 import { CSSDetailLevel, TextDetailLevel } from './types';
 
-export const TEXT_DETAIL_OPTIONS: readonly TextDetailLevel[] = ['full', 'visible', 'none'];
+function getEnumNumberValues<T extends Record<string, string | number>>(enumObj: T): number[] {
+  return Object.values(enumObj).filter((value): value is number => typeof value === 'number');
+}
 
-export const CSS_DETAIL_OPTIONS: readonly CSSDetailLevel[] = [0, 1, 2, 3];
+export const TEXT_DETAIL_OPTIONS: readonly TextDetailLevel[] = Object.freeze(
+  getEnumNumberValues(TextDetailLevel) as TextDetailLevel[],
+);
+
+export const CSS_DETAIL_OPTIONS: readonly CSSDetailLevel[] = Object.freeze(
+  getEnumNumberValues(CSSDetailLevel) as CSSDetailLevel[],
+);
 
 export const CSS_LEVEL_1_FIELDS: readonly string[] = [
   'display',
@@ -59,16 +67,16 @@ export const CSS_LEVEL_2_FIELDS: readonly string[] = Object.freeze([
 ]);
 
 export const CSS_LEVEL_FIELD_MAP: Record<
-Exclude<CSSDetailLevel, 0>,
+Exclude<CSSDetailLevel, CSSDetailLevel.NONE>,
 readonly string[]
 > = Object.freeze({
-  1: CSS_LEVEL_1_FIELDS,
-  2: CSS_LEVEL_2_FIELDS,
-  3: [],
+  [CSSDetailLevel.BASIC]: CSS_LEVEL_1_FIELDS,
+  [CSSDetailLevel.BOX_MODEL]: CSS_LEVEL_2_FIELDS,
+  [CSSDetailLevel.FULL]: [],
 });
 
 export function isValidTextDetail(detail: unknown): detail is TextDetailLevel {
-  return typeof detail === 'string' && (TEXT_DETAIL_OPTIONS as readonly string[]).includes(detail);
+  return typeof detail === 'number' && (TEXT_DETAIL_OPTIONS as readonly number[]).includes(detail);
 }
 
 export function isValidCSSLevel(level: unknown): level is CSSDetailLevel {
