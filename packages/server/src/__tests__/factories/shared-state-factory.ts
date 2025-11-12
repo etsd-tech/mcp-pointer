@@ -1,6 +1,6 @@
-import { TargetedElement, RawPointedDOMElement, PointerMessageType } from '@mcp-pointer/shared/types';
+import { RawPointedDOMElement, PointerMessageType } from '@mcp-pointer/shared/types';
 import {
-  SharedState, StateDataV1, StateDataV2, ProcessedPointedDOMElement,
+  SharedState, SharedStateData, ProcessedPointedDOMElement,
 } from '../../types';
 
 export const createProcessedElement = (
@@ -39,34 +39,10 @@ export const createRawElement = (
   ...overrides,
 });
 
-export const createLegacyElement = (
-  overrides: Partial<TargetedElement> = {},
-): TargetedElement => ({
-  selector: 'div',
-  tagName: 'div',
-  classes: [],
-  innerText: 'test content',
-  attributes: {},
-  position: {
-    x: 10, y: 20, width: 100, height: 50,
-  },
-  cssProperties: {
-    display: 'block',
-    position: 'relative',
-    fontSize: '16px',
-    color: '#000000',
-    backgroundColor: '#ffffff',
-  },
-  timestamp: 1672531200000,
-  url: 'https://example.com',
-  ...overrides,
-});
-
-export const createStateV2 = (
+export const createSharedState = (
   rawOverrides: Partial<RawPointedDOMElement> = {},
   processedOverrides: Partial<ProcessedPointedDOMElement> = {},
 ): SharedState => ({
-  stateVersion: 2,
   data: {
     rawPointedDOMElement: createRawElement(rawOverrides),
     processedPointedDOMElement: createProcessedElement(processedOverrides),
@@ -74,20 +50,5 @@ export const createStateV2 = (
       receivedAt: '2023-01-01T00:00:00.000Z',
       messageType: PointerMessageType.DOM_ELEMENT_POINTED,
     },
-  } as StateDataV2,
-});
-
-export const createStateV1 = (
-  legacyOverrides: Partial<TargetedElement> = {},
-  processedOverrides: Partial<ProcessedPointedDOMElement> = {},
-): SharedState => ({
-  stateVersion: 1,
-  data: {
-    rawPointedDOMElement: createLegacyElement(legacyOverrides),
-    processedPointedDOMElement: createProcessedElement(processedOverrides),
-    metadata: {
-      receivedAt: '2023-01-01T00:00:00.000Z',
-      messageType: PointerMessageType.LEGACY_ELEMENT_SELECTED,
-    },
-  } as StateDataV1,
+  } as SharedStateData,
 });

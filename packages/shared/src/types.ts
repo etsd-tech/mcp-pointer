@@ -1,3 +1,25 @@
+export enum TextDetailLevel {
+  NONE = 0,
+  VISIBLE = 1,
+  FULL = 2,
+}
+
+export enum CSSDetailLevel {
+  NONE = 0,
+  BASIC = 1,
+  BOX_MODEL = 2,
+  FULL = 3,
+}
+
+export const DEFAULT_TEXT_DETAIL: TextDetailLevel = TextDetailLevel.FULL;
+
+export const DEFAULT_CSS_LEVEL: CSSDetailLevel = CSSDetailLevel.BASIC;
+
+export interface TextSnapshots {
+  visible: string;
+  full: string;
+}
+
 export interface ElementPosition {
   x: number;
   y: number;
@@ -5,13 +27,7 @@ export interface ElementPosition {
   height: number;
 }
 
-export interface CSSProperties {
-  display: string;
-  position: string;
-  fontSize: string;
-  color: string;
-  backgroundColor: string;
-}
+export type CSSProperties = Record<string, string>;
 
 export interface ComponentInfo {
   name?: string;
@@ -24,10 +40,15 @@ export interface TargetedElement {
   tagName: string;
   id?: string;
   classes: string[];
-  innerText: string;
+  innerText?: string;
+  textContent?: string;
+  textDetail?: TextDetailLevel;
+  textVariants?: TextSnapshots;
   attributes: Record<string, string>;
   position: ElementPosition;
-  cssProperties: CSSProperties;
+  cssLevel?: CSSDetailLevel;
+  cssProperties?: CSSProperties;
+  cssComputed?: Record<string, string>;
   componentInfo?: ComponentInfo;
   timestamp: number;
   url: string;
