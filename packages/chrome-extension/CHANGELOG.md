@@ -1,5 +1,12 @@
 # @mcp-pointer/chrome-extension
 
+## 0.6.0
+
+### Patch Changes
+
+- Updated dependencies [ca7a516]
+  - @mcp-pointer/shared@0.5.0
+
 ## 0.5.2
 
 ### Patch Changes
